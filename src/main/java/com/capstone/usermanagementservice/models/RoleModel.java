@@ -15,4 +15,6 @@ public class RoleModel extends BaseModel {
     @Enumerated(EnumType.STRING)
     private RoleEnum value;
 
+    private Long userId;
+
 }

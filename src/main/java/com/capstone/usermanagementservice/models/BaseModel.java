@@ -1,5 +1,6 @@
 package com.capstone.usermanagementservice.models;
 
+import com.capstone.usermanagementservice.models.constants.StateEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

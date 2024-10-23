@@ -5,7 +5,7 @@ import com.capstone.usermanagementservice.dtos.EmailDto;
 import com.capstone.usermanagementservice.exceptions.InvalidCredentialsException;
 import com.capstone.usermanagementservice.exceptions.UserAlreadyExistsException;
 import com.capstone.usermanagementservice.models.SessionModel;
-import com.capstone.usermanagementservice.models.StateEnum;
+import com.capstone.usermanagementservice.models.constants.StateEnum;
 import com.capstone.usermanagementservice.models.UserModel;
 import com.capstone.usermanagementservice.repos.SessionRepo;
 import com.capstone.usermanagementservice.repos.UserRepo;

@@ -10,6 +10,4 @@ public class RoleResponseDto {
 
     private RoleEnum role;
 
-    private String display;
-
 }

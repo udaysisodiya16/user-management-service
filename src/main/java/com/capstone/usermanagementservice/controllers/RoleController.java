@@ -1,6 +1,7 @@
 package com.capstone.usermanagementservice.controllers;
 
 import com.capstone.usermanagementservice.dtos.RoleResponseDto;
+import com.capstone.usermanagementservice.mappers.RoleMapper;
 import com.capstone.usermanagementservice.models.RoleModel;
 import com.capstone.usermanagementservice.services.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,12 @@ public class RoleController {
     @Autowired
     private IRoleService roleService;
 
+    @Autowired
+    private RoleMapper roleMapper;
+
     @GetMapping("/user/{userId}/role")
     public ResponseEntity<List<RoleResponseDto>> getRoles(@PathVariable("userId") Long userId) {
         List<RoleModel> roleModels = roleService.getRoles(userId);
-        return ResponseEntity.ok(userMapper.userToUserDetailResponseDto(user));
+        return ResponseEntity.ok(roleMapper.roleModelsToRoleResponseDtos(roleModels));
     }
 }

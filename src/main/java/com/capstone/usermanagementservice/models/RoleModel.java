@@ -1,6 +1,6 @@
 package com.capstone.usermanagementservice.models;
 
-import com.capstone.usermanagementservice.models.constants.RoleEnum;
+import com.capstone.usermanagementservice.constants.RoleEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

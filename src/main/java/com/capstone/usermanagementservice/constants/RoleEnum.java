@@ -1,4 +1,4 @@
-package com.capstone.usermanagementservice.models.constants;
+package com.capstone.usermanagementservice.constants;
 
 import lombok.Getter;
 

@@ -4,10 +4,12 @@ import com.capstone.usermanagementservice.constants.RoleEnum;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
-@Getter
-public class RoleResponseDto {
+import java.util.List;
 
-    private RoleEnum role;
+@Getter
+@Setter
+public class RoleUpdateRequestDto {
+
+    private List<RoleEnum> roles;
 
 }

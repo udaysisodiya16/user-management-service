@@ -18,5 +18,4 @@ public class UserDetailUpdateRequestDto {
 
     private String lastName;
 
-    private Set<RoleDto> roles;
 }

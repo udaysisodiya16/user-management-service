@@ -1,6 +1,9 @@
 package com.capstone.usermanagementservice.models;
 
+import com.capstone.usermanagementservice.models.constants.RoleEnum;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,5 +11,8 @@ import lombok.Setter;
 @Getter
 @Entity(name = "role")
 public class RoleModel extends BaseModel {
-    private String value;
+
+    @Enumerated(EnumType.STRING)
+    private RoleEnum value;
+
 }

@@ -13,6 +13,4 @@ public class UserDetailResponseDto {
     private String firstName;
     private String lastName;
 
-    private Set<RoleDto> roles;
-
 }

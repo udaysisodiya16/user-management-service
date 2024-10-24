@@ -11,16 +11,20 @@ import com.capstone.usermanagementservice.repos.SessionRepo;
 import com.capstone.usermanagementservice.repos.UserRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import javax.crypto.SecretKey;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -74,27 +78,30 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public Pair<UserModel,MultiValueMap<String,String>> login(String email, String password) throws InvalidCredentialsException {
+    public Pair<UserModel, MultiValueMap<String, String>> login(String email, String password) throws InvalidCredentialsException {
         Optional<UserModel> userOptional = userRepo.findUserByEmail(email);
 
-        if(userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
             UserModel user = userOptional.get();
-            if(!bCryptPasswordEncoder.matches(password,user.getPassword())) {
-              throw new InvalidCredentialsException("please provide correct password");
+            if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
+                throw new InvalidCredentialsException("please provide correct password");
             }
 
-            Map<String,Object> claims =new HashMap<>();
-            claims.put("user_id__",user.getId());
-            claims.put("roles",user.getRoles());
-            long timeInMillis = System.currentTimeMillis();
-            claims.put("iat",timeInMillis);
-            claims.put("exp",timeInMillis+86400000);
-            String token = Jwts.builder().claims(claims).signWith(secretKey).compact();
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("user_id", user.getId());
+            claims.put("roles", user.getRoles());
+            String token = Jwts.builder()
+                    .claims(claims)
+                    .subject(user.getEmail())
+                    .issuedAt(new Date(System.currentTimeMillis()))
+                    .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                    .signWith(secretKey)
+                    .compact();
 
-            MultiValueMap<String,String> headers = new LinkedMultiValueMap<>();
-            headers.add(HttpHeaders.SET_COOKIE,token);
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+            headers.add(HttpHeaders.SET_COOKIE, token);
 
-            Pair<UserModel,MultiValueMap<String,String>> p = new Pair<>(user,headers);
+            Pair<UserModel, MultiValueMap<String, String>> p = new Pair<>(user, headers);
 
             SessionModel session = new SessionModel();
             session.setToken(token);
@@ -106,42 +113,49 @@ public class AuthService implements IAuthService {
         return null;
     }
 
+    @Override
+    public UserModel logout(String email) {
+        return null;
+    }
 
-    public Boolean validateToken(String token,Long userId) {
-/*         Optional<Session> optionalSession = sessionRepo.findByTokenAndUser_Id(token,userId);
+    public Boolean validateToken(String token, Long userId) {
+        Optional<SessionModel> optionalSession = sessionRepo.findByTokenAndUser_Id(token, userId);
 
-         if(!optionalSession.isPresent()) {
+         if(optionalSession.isEmpty()) {
              return false;
          }
+
+        SessionModel sessionModel = optionalSession.get();
 
         JwtParser jwtParser = Jwts.parser().verifyWith(secretKey).build();
         Claims claims = jwtParser.parseSignedClaims(token).getPayload();
 
-        Long expiry = (Long)claims.get("exp");
-        Long currentTimeInMillis = System.currentTimeMillis();
 
-        System.out.println(expiry);
-        System.out.println(currentTimeInMillis);
-
-        if(currentTimeInMillis > expiry) {
+        if(claims.getExpiration().before(new Date())) {
             System.out.println("TOKEN EXPIRED");
             //1. clear expired token from DB async with help of kAFKA
             //2. YOU can also trigger login API
             //3. Use same api in order service to validate user before getting order info.
             return false;
-        }*/
-
+        }
         //List<Role> roles = (Long)claims.get("roles");
         //if(roles.contains())
-
 
         return true;
     }
 
+    // Extract username from JWT token
+    public String extractUsername(String token) {
+        return extractClaims(token).getSubject();
+    }
 
+    public Claims extractClaims(String token){
+        JwtParser jwtParser = Jwts.parser().verifyWith(secretKey).build();
+        return jwtParser.parseSignedClaims(token).getPayload();
+    }
 
     @Override
-    public UserModel logout(String email) {
+    public Boolean validateToken(String token, UserDetails userDetails) {
         return null;
     }
 }

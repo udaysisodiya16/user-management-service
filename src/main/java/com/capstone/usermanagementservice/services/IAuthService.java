@@ -5,6 +5,7 @@ import com.capstone.usermanagementservice.exceptions.UserAlreadyExistsException;
 import com.capstone.usermanagementservice.models.UserModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.antlr.v4.runtime.misc.Pair;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.MultiValueMap;
 
 public interface IAuthService {
@@ -16,4 +17,8 @@ public interface IAuthService {
     UserModel logout(String email);
 
     Boolean validateToken(String token, Long userId);
+
+    String extractUsername(String token);
+
+    Boolean validateToken(String token, UserDetails userDetails);
 }

@@ -1,32 +1,28 @@
 package com.capstone.usermanagementservice.services;
 
 import com.capstone.usermanagementservice.clients.KafkaClient;
+import com.capstone.usermanagementservice.constants.StateEnum;
 import com.capstone.usermanagementservice.dtos.EmailDto;
 import com.capstone.usermanagementservice.exceptions.InvalidCredentialsException;
+import com.capstone.usermanagementservice.exceptions.NotFoundException;
 import com.capstone.usermanagementservice.exceptions.UserAlreadyExistsException;
 import com.capstone.usermanagementservice.models.SessionModel;
-import com.capstone.usermanagementservice.constants.StateEnum;
 import com.capstone.usermanagementservice.models.UserModel;
 import com.capstone.usermanagementservice.repos.SessionRepo;
 import com.capstone.usermanagementservice.repos.UserRepo;
+import com.capstone.usermanagementservice.security.CustomUserDetails;
+import com.capstone.usermanagementservice.util.JwtUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -36,7 +32,7 @@ public class AuthService implements IAuthService {
     private UserRepo userRepo;
 
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private SessionRepo sessionRepo;
@@ -59,7 +55,7 @@ public class AuthService implements IAuthService {
 
         UserModel user = new UserModel();
         user.setEmail(email);
-        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setPassword(passwordEncoder.encode(password));
         user.setState(StateEnum.ACTIVE);
         userRepo.save(user);
 
@@ -79,38 +75,24 @@ public class AuthService implements IAuthService {
 
     @Override
     public Pair<UserModel, MultiValueMap<String, String>> login(String email, String password) throws InvalidCredentialsException {
-        Optional<UserModel> userOptional = userRepo.findUserByEmail(email);
-
-        if (userOptional.isPresent()) {
-            UserModel user = userOptional.get();
-            if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
-                throw new InvalidCredentialsException("please provide correct password");
-            }
-
-            Map<String, Object> claims = new HashMap<>();
-            claims.put("user_id", user.getId());
-            claims.put("roles", user.getRoles());
-            String token = Jwts.builder()
-                    .claims(claims)
-                    .subject(user.getEmail())
-                    .issuedAt(new Date(System.currentTimeMillis()))
-                    .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                    .signWith(secretKey)
-                    .compact();
-
-            MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-            headers.add(HttpHeaders.SET_COOKIE, token);
-
-            Pair<UserModel, MultiValueMap<String, String>> p = new Pair<>(user, headers);
-
-            SessionModel session = new SessionModel();
-            session.setToken(token);
-            session.setUser(user);
-            session.setState(StateEnum.ACTIVE);
-            sessionRepo.save(session);
-            return p;
+        UserModel user = userRepo.findUserByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new InvalidCredentialsException("please provide correct password");
         }
-        return null;
+
+        String token = JwtUtil.generateToken(secretKey, new CustomUserDetails(user));
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add(HttpHeaders.SET_COOKIE, token);
+
+        Pair<UserModel, MultiValueMap<String, String>> p = new Pair<>(user, headers);
+
+        SessionModel session = new SessionModel();
+        session.setToken(token);
+        session.setUser(user);
+        session.setState(StateEnum.ACTIVE);
+        sessionRepo.save(session);
+        return p;
     }
 
     @Override
@@ -118,44 +100,13 @@ public class AuthService implements IAuthService {
         return null;
     }
 
+    @Override
     public Boolean validateToken(String token, Long userId) {
+        UserModel user = userRepo.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         Optional<SessionModel> optionalSession = sessionRepo.findByTokenAndUser_Id(token, userId);
-
-         if(optionalSession.isEmpty()) {
-             return false;
-         }
-
-        SessionModel sessionModel = optionalSession.get();
-
-        JwtParser jwtParser = Jwts.parser().verifyWith(secretKey).build();
-        Claims claims = jwtParser.parseSignedClaims(token).getPayload();
-
-
-        if(claims.getExpiration().before(new Date())) {
-            System.out.println("TOKEN EXPIRED");
-            //1. clear expired token from DB async with help of kAFKA
-            //2. YOU can also trigger login API
-            //3. Use same api in order service to validate user before getting order info.
+        if (optionalSession.isEmpty()) {
             return false;
         }
-        //List<Role> roles = (Long)claims.get("roles");
-        //if(roles.contains())
-
-        return true;
-    }
-
-    // Extract username from JWT token
-    public String extractUsername(String token) {
-        return extractClaims(token).getSubject();
-    }
-
-    public Claims extractClaims(String token){
-        JwtParser jwtParser = Jwts.parser().verifyWith(secretKey).build();
-        return jwtParser.parseSignedClaims(token).getPayload();
-    }
-
-    @Override
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        return null;
+        return JwtUtil.validateToken(token, secretKey, new CustomUserDetails(user));
     }
 }

@@ -1,7 +1,6 @@
 package com.capstone.usermanagementservice.controllers;
 
 import com.capstone.usermanagementservice.dtos.*;
-import com.capstone.usermanagementservice.exceptions.InvalidCredentialsException;
 import com.capstone.usermanagementservice.exceptions.UserAlreadyExistsException;
 import com.capstone.usermanagementservice.mappers.UserMapper;
 import com.capstone.usermanagementservice.models.UserModel;
@@ -40,17 +39,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        try {
-            Pair<UserModel, MultiValueMap<String, String>> userWithHeaders = authService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
-            if (userWithHeaders.a == null) {
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-            }
-            UserDto userDto = userMapper.userToUserDto(userWithHeaders.a);
-            return new ResponseEntity<>(userDto, userWithHeaders.b, HttpStatus.OK);
-        } catch (InvalidCredentialsException exception) {
-            throw new RuntimeException(exception.getMessage());
-        }
+    public ResponseEntity<UserDto> login(@RequestBody LoginRequestDto loginRequestDto) throws Exception {
+        Pair<UserModel, MultiValueMap<String, String>> userWithHeaders = authService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+        UserDto userDto = userMapper.userToUserDto(userWithHeaders.a);
+        return new ResponseEntity<>(userDto, userWithHeaders.b, HttpStatus.OK);
     }
 
     @PostMapping("/logout")

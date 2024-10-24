@@ -1,5 +1,6 @@
 package com.capstone.usermanagementservice.controllers;
 
+import com.capstone.usermanagementservice.exceptions.InvalidCredentialsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,5 +17,11 @@ public class ControllerAdvisor {
     public ResponseEntity<String> handleExceptions(Exception exception) {
         exception.printStackTrace();
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<String> handleInvalidCredentialsException(Exception exception) {
+        exception.printStackTrace();
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }

@@ -14,9 +14,16 @@ import javax.crypto.SecretKey;
 public class SpringSecurity {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
-        return httpSecurity.build();
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable() // Disable CSRF for API
+                .authorizeHttpRequests(auth -> auth
+                        // Allow public access to login and signup APIs
+                        .requestMatchers("/login", "/signup").permitAll()
+                        // Secure all other endpoints
+                        .anyRequest().authenticated()
+                );
+        return http.build();
     }
 
     @Bean
@@ -27,8 +34,7 @@ public class SpringSecurity {
     @Bean
     public SecretKey secretKey() {
         MacAlgorithm algorithm = Jwts.SIG.HS256;
-        SecretKey secretKey = algorithm.key().build();
-        return secretKey;
+        return algorithm.key().build();
     }
 
 }

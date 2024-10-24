@@ -9,7 +9,7 @@ import org.springframework.util.MultiValueMap;
 
 public interface IAuthService {
 
-    UserModel signup(String email, String password, String firstName, String lastName) throws UserAlreadyExistsException, JsonProcessingException;
+    UserModel signup(String email, String password) throws UserAlreadyExistsException, JsonProcessingException;
 
     Pair<UserModel, MultiValueMap<String, String>> login(String email, String password) throws InvalidCredentialsException;
 

@@ -9,8 +9,6 @@ import com.capstone.usermanagementservice.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserService implements IUserService{
 
@@ -27,16 +25,11 @@ public class UserService implements IUserService{
 
     @Override
     public UserModel updateUserDetail(Long id, UserDetailUpdateRequestDto userDetailUpdateRequestDto) {
-        return null;
+        UserModel userModel = userRepo.findById(id).orElseThrow(() -> new NotFoundException("User Not Exist"));
+        userModel.setEmail(userDetailUpdateRequestDto.getEmail());
+        userModel.setFirstName(userDetailUpdateRequestDto.getFirstName());
+        userModel.setLastName(userDetailUpdateRequestDto.getLastName());
+        return userRepo.save(userModel);
     }
 
-    @Override
-    public List<RoleModel> getUserRoles(Long id) {
-        return List.of();
-    }
-
-    @Override
-    public List<RoleModel> updateUserRoles(Long id) {
-        return List.of();
-    }
 }

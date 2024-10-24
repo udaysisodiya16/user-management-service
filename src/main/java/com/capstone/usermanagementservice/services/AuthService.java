@@ -47,7 +47,7 @@ public class AuthService implements IAuthService {
     private ObjectMapper objectMapper;
 
     @Override
-    public UserModel signup(String email, String password, String firstName, String lastName) throws UserAlreadyExistsException, JsonProcessingException {
+    public UserModel signup(String email, String password) throws UserAlreadyExistsException, JsonProcessingException {
         Optional<UserModel> userOptional = userRepo.findUserByEmail(email);
         if (userOptional.isPresent()) {
             throw new UserAlreadyExistsException("Email already registered !!");
@@ -56,8 +56,6 @@ public class AuthService implements IAuthService {
         UserModel user = new UserModel();
         user.setEmail(email);
         user.setPassword(bCryptPasswordEncoder.encode(password));
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
         user.setState(StateEnum.ACTIVE);
         userRepo.save(user);
 

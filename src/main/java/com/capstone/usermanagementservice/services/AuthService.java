@@ -11,9 +11,9 @@ import com.capstone.usermanagementservice.models.UserModel;
 import com.capstone.usermanagementservice.repos.SessionRepo;
 import com.capstone.usermanagementservice.repos.UserRepo;
 import com.capstone.usermanagementservice.security.CustomUserDetails;
+import com.capstone.usermanagementservice.util.EmailUtil;
 import com.capstone.usermanagementservice.util.JwtUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -41,10 +41,7 @@ public class AuthService implements IAuthService {
     private SecretKey secretKey;
 
     @Autowired
-    private KafkaClient kafkaClient;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    private EmailUtil emailUtil;
 
     @Override
     public UserModel signup(String email, String password) throws UserAlreadyExistsException, JsonProcessingException {
@@ -59,16 +56,7 @@ public class AuthService implements IAuthService {
         user.setState(StateEnum.ACTIVE);
         userRepo.save(user);
 
-        //using kafka
-
-        String topic = "user_signedin";
-        EmailDto emailDto = new EmailDto();
-        emailDto.setFrom("anuragbatch@gmail.com");
-        emailDto.setTo(email);
-        emailDto.setSubject("Welcome to Scaler");
-        emailDto.setBody("Have a pleasant learning experience.");
-        String message = objectMapper.writeValueAsString(emailDto);
-//            kafkaClient.sendMessage(topic,message);
+        emailUtil.sendSignupEmail(user.getEmail());
 
         return user;
     }

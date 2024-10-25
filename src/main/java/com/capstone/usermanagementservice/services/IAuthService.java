@@ -16,4 +16,5 @@ public interface IAuthService {
 
     Boolean validateToken(String token, Long userId);
 
+    Boolean requestPasswordReset(String email) throws JsonProcessingException;
 }

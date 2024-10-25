@@ -60,4 +60,10 @@ public class AuthController {
         return result;
     }
 
+    @PostMapping("/resetPasswordRequest")
+    public ResponseEntity<Boolean> requestPasswordReset(@RequestBody @Valid PasswordResetRequestDto requestDto) throws JsonProcessingException {
+        Boolean status = authService.requestPasswordReset(requestDto.getEmail());
+        return ResponseEntity.ok(status);
+    }
+
 }

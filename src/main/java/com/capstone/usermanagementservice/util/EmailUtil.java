@@ -25,6 +25,17 @@ public class EmailUtil {
         emailDto.setSubject("Welcome to User management service");
         emailDto.setBody("Have a pleasant learning experience.");
         String message = objectMapper.writeValueAsString(emailDto);
-        // kafkaClient.sendMessage(topic,message);
+        kafkaClient.sendMessage(topic, message);
+    }
+
+    public void sendPasswordResetEmail(String email, String token) throws JsonProcessingException {
+        String topic = "password_reset_email";
+        EmailDto emailDto = new EmailDto();
+        emailDto.setFrom("usermanagementservice@gmail.com");
+        emailDto.setTo(email);
+        emailDto.setSubject("Welcome to User management service");
+        emailDto.setBody("Your password reset request has been generated with \n token : " + token);
+        String message = objectMapper.writeValueAsString(emailDto);
+        kafkaClient.sendMessage(topic, message);
     }
 }

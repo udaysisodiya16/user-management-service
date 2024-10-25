@@ -95,4 +95,12 @@ public class AuthService implements IAuthService {
         }
         return JwtUtil.validateToken(token, secretKey, new CustomUserDetails(user));
     }
+
+    @Override
+    public Boolean requestPasswordReset(String email) throws JsonProcessingException {
+        UserModel user = userRepo.findUserByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
+        String token = JwtUtil.generateToken(secretKey, new CustomUserDetails(user));
+        emailUtil.sendPasswordResetEmail(user.getEmail(), token);
+        return true;
+    }
 }

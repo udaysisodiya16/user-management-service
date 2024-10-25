@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.crypto.SecretKey;
 
 @Configuration
-public class CommonConfiguration {
+public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {

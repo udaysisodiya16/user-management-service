@@ -1,8 +1,6 @@
 package com.capstone.usermanagementservice.services;
 
-import com.capstone.usermanagementservice.clients.KafkaClient;
 import com.capstone.usermanagementservice.constants.StateEnum;
-import com.capstone.usermanagementservice.dtos.EmailDto;
 import com.capstone.usermanagementservice.exceptions.InvalidCredentialsException;
 import com.capstone.usermanagementservice.exceptions.NotFoundException;
 import com.capstone.usermanagementservice.exceptions.UserAlreadyExistsException;

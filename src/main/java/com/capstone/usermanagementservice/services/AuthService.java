@@ -12,9 +12,11 @@ import com.capstone.usermanagementservice.security.CustomUserDetails;
 import com.capstone.usermanagementservice.util.EmailUtil;
 import com.capstone.usermanagementservice.util.JwtUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -40,6 +42,9 @@ public class AuthService implements IAuthService {
 
     @Autowired
     private EmailUtil emailUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Override
     public UserModel signup(String email, String password) throws UserAlreadyExistsException, JsonProcessingException {
@@ -101,6 +106,16 @@ public class AuthService implements IAuthService {
         UserModel user = userRepo.findUserByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
         String token = JwtUtil.generateToken(secretKey, new CustomUserDetails(user));
         emailUtil.sendPasswordResetEmail(user.getEmail(), token);
+        return true;
+    }
+
+    @Override
+    public Boolean resetPassword(HttpServletRequest httpRequest, String newPassword) {
+        String token = JwtUtil.extractJwtToken(httpRequest);
+        String username = JwtUtil.extractUsername(secretKey, token);
+        UserModel user = userRepo.findUserByEmail(username).orElseThrow(() -> new NotFoundException("User not found"));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepo.save(user);
         return true;
     }
 }

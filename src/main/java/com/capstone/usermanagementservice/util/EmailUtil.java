@@ -18,7 +18,7 @@ public class EmailUtil {
 
     public void sendSignupEmail(String email) throws JsonProcessingException {
         //using kafka
-        String topic = "user_signedin";
+        String topic = "user_signup_email";
         EmailDto emailDto = new EmailDto();
         emailDto.setFrom("usermanagementservice@gmail.com");
         emailDto.setTo(email);

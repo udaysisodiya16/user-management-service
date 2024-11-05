@@ -1,7 +1,7 @@
 package com.capstone.usermanagementservice.models;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +12,6 @@ public class SessionModel extends BaseModel {
 
     private String token;
 
-    @ManyToOne
+    @OneToOne
     private UserModel user;
 }

@@ -1,5 +1,7 @@
 package com.capstone.usermanagementservice.auth;
 
+import com.capstone.usermanagementservice.models.SessionModel;
+import com.capstone.usermanagementservice.repos.SessionRepo;
 import com.capstone.usermanagementservice.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -26,6 +29,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private SecretKey secretKey;
 
+    @Autowired
+    private SessionRepo sessionRepo;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = JwtUtil.extractJwtToken(request);
@@ -35,8 +41,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
+            Optional<SessionModel> sessionModelOptional = sessionRepo.findByTokenAndUser_Email(jwt, username);
+
             // Validate the token with the user details
-            if (JwtUtil.validateToken(jwt, secretKey, userDetails)) {
+            if (sessionModelOptional.isPresent() && JwtUtil.validateToken(jwt, secretKey, userDetails)) {
 
                 // Create the authentication object
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

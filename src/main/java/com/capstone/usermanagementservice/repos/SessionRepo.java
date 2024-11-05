@@ -1,6 +1,7 @@
 package com.capstone.usermanagementservice.repos;
 
 import com.capstone.usermanagementservice.models.SessionModel;
+import com.capstone.usermanagementservice.models.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +14,5 @@ public interface SessionRepo extends JpaRepository<SessionModel, Long> {
 
     Optional<SessionModel> findByTokenAndUser_Email(String jwt, String username);
 
+    Optional<SessionModel> findByUser(UserModel user);
 }

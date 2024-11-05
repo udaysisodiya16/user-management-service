@@ -88,7 +88,10 @@ public class AuthService implements IAuthService {
 
     @Override
     public UserModel logout(String email) {
-        return null;
+        UserModel user = userRepo.findUserByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
+        SessionModel session = sessionRepo.findByUser(user).orElseThrow(() -> new NotFoundException("Session not found"));
+        sessionRepo.delete(session);
+        return user;
     }
 
     @Override

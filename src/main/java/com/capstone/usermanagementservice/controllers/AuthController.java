@@ -48,8 +48,9 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<UserDto> logout(@RequestBody LogoutRequestDto logoutRequestDto) {
-        //Learners need to implement after 6 sept
-        return null;
+        UserModel user = authService.logout(logoutRequestDto.getEmail());
+        UserDto userDto = userMapper.userToUserDto(user);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     @PostMapping("/validateToken")

@@ -18,5 +18,5 @@ public interface IAuthService {
 
     Boolean requestPasswordReset(String email) throws JsonProcessingException;
 
-    Boolean resetPassword(String username, String newPassword);
+    Boolean resetPassword(String email, String newPassword);
 }

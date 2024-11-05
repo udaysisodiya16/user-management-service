@@ -112,8 +112,8 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public Boolean resetPassword(String username, String newPassword) {
-        UserModel user = userRepo.findUserByEmail(username).orElseThrow(() -> new NotFoundException("User not found"));
+    public Boolean resetPassword(String email, String newPassword) {
+        UserModel user = userRepo.findUserByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepo.save(user);
         return true;

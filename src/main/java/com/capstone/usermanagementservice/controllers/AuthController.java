@@ -69,7 +69,7 @@ public class AuthController {
 
     @PostMapping("/resetPassword")
     public ResponseEntity<Boolean> resetPassword(@RequestBody @Valid PasswordResetDto passwordResetDto) {
-        Boolean status = authService.resetPassword(passwordResetDto.getUsername(), passwordResetDto.getNewPassword());
+        Boolean status = authService.resetPassword(passwordResetDto.getEmail(), passwordResetDto.getNewPassword());
         return ResponseEntity.ok(status);
     }
 

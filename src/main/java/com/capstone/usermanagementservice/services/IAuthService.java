@@ -3,7 +3,6 @@ package com.capstone.usermanagementservice.services;
 import com.capstone.usermanagementservice.exceptions.UserAlreadyExistsException;
 import com.capstone.usermanagementservice.models.UserModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.servlet.http.HttpServletRequest;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.util.MultiValueMap;
 
@@ -19,5 +18,5 @@ public interface IAuthService {
 
     Boolean requestPasswordReset(String email) throws JsonProcessingException;
 
-    Boolean resetPassword(HttpServletRequest httpRequest, String newPassword);
+    Boolean resetPassword(String email, String newPassword);
 }

@@ -12,7 +12,6 @@ import com.capstone.usermanagementservice.security.CustomUserDetails;
 import com.capstone.usermanagementservice.util.EmailUtil;
 import com.capstone.usermanagementservice.util.JwtUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.servlet.http.HttpServletRequest;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -113,10 +112,8 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public Boolean resetPassword(HttpServletRequest httpRequest, String newPassword) {
-        String token = JwtUtil.extractJwtToken(httpRequest);
-        String username = JwtUtil.extractUsername(secretKey, token);
-        UserModel user = userRepo.findUserByEmail(username).orElseThrow(() -> new NotFoundException("User not found"));
+    public Boolean resetPassword(String email, String newPassword) {
+        UserModel user = userRepo.findUserByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepo.save(user);
         return true;

@@ -6,7 +6,6 @@ import com.capstone.usermanagementservice.mappers.UserMapper;
 import com.capstone.usermanagementservice.models.UserModel;
 import com.capstone.usermanagementservice.services.IAuthService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +68,8 @@ public class AuthController {
     }
 
     @PostMapping("/resetPassword")
-    public ResponseEntity<Boolean> resetPassword(HttpServletRequest httpRequest, @RequestBody @Valid PasswordResetDto passwordResetDto) {
-        Boolean status = authService.resetPassword(httpRequest, passwordResetDto.getNewPassword());
+    public ResponseEntity<Boolean> resetPassword(@RequestBody @Valid PasswordResetDto passwordResetDto) {
+        Boolean status = authService.resetPassword(passwordResetDto.getEmail(), passwordResetDto.getNewPassword());
         return ResponseEntity.ok(status);
     }
 

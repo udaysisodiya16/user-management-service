@@ -9,8 +9,8 @@ import com.capstone.usermanagementservice.models.UserModel;
 import com.capstone.usermanagementservice.repos.SessionRepo;
 import com.capstone.usermanagementservice.repos.UserRepo;
 import com.capstone.usermanagementservice.security.CustomUserDetails;
-import com.capstone.usermanagementservice.util.EmailUtil;
 import com.capstone.usermanagementservice.util.JwtUtil;
+import com.capstone.usermanagementservice.util.NotificationUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class AuthService implements IAuthService {
     private SecretKey secretKey;
 
     @Autowired
-    private EmailUtil emailUtil;
+    private NotificationUtil notificationUtil;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -58,7 +58,7 @@ public class AuthService implements IAuthService {
         user.setState(StateEnum.ACTIVE);
         userRepo.save(user);
 
-        emailUtil.sendSignupEmail(user.getEmail());
+        notificationUtil.sendSignupNotification(user.getEmail());
 
         return user;
     }
@@ -107,7 +107,7 @@ public class AuthService implements IAuthService {
     public Boolean requestPasswordReset(String email) throws JsonProcessingException {
         UserModel user = userRepo.findUserByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
         String token = JwtUtil.generateToken(secretKey, new CustomUserDetails(user));
-        emailUtil.sendPasswordResetEmail(user.getEmail(), token);
+        notificationUtil.sendPasswordResetNotification(user.getEmail(), token);
         return true;
     }
 

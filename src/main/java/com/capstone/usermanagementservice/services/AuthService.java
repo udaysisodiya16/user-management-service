@@ -96,7 +96,7 @@ public class AuthService implements IAuthService {
     @Override
     public Boolean validateToken(String token, Long userId) {
         UserModel user = userRepo.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        Optional<SessionModel> optionalSession = sessionRepo.findByTokenAndUser_Id(token, userId);
+        Optional<SessionModel> optionalSession = sessionRepo.findByTokenAndUser_Id(token, user.getId());
         if (optionalSession.isEmpty()) {
             return false;
         }

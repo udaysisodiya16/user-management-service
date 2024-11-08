@@ -49,16 +49,16 @@ public class AuthController {
     public ResponseEntity<UserDto> logout(@RequestBody LogoutRequestDto logoutRequestDto) {
         UserModel user = authService.logout(logoutRequestDto.getEmail());
         UserDto userDto = userMapper.userToUserDto(user);
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        return ResponseEntity.ok(userDto);
     }
 
     @PostMapping("/validateToken")
-    public Boolean validateToken(@RequestBody ValidateTokenDto validateTokenDto) {
+    public ResponseEntity<Boolean> validateToken(@RequestBody ValidateTokenDto validateTokenDto) {
         Boolean result = authService.validateToken(validateTokenDto.getToken(), validateTokenDto.getUserId());
         if (!result) {
             throw new RuntimeException("Please login again");
         }
-        return result;
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/resetPasswordRequest")

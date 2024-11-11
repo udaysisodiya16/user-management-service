@@ -116,6 +116,8 @@ public class AuthService implements IAuthService {
         UserModel user = userRepo.findUserByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepo.save(user);
+        SessionModel session = sessionRepo.findByUser(user).orElseThrow(() -> new NotFoundException("Session not found"));
+        sessionRepo.delete(session);
         return true;
     }
 }

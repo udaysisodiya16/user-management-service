@@ -52,12 +52,13 @@ A Spring Boot-based service to manage user accounts, including features for regi
    ```
 
 2. **Configure MySQL**:
-  - Create a database named `user_management_db`.
+  - Create a database named `user_management_service`.
   - Update the `application.properties` file with your MySQL credentials:
     ```properties
-    spring.datasource.url=jdbc:mysql://localhost:3306/user_management_db
-    spring.datasource.username=your-username
-    spring.datasource.password=your-password
+    spring.datasource.url=jdbc:mysql://localhost:3306/user_management_service
+    spring.datasource.username=root
+    spring.datasource.password=root
+    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     ```
 
 3. **Configure Kafka**:
@@ -76,7 +77,7 @@ A Spring Boot-based service to manage user accounts, including features for regi
     mvn spring-boot:run
     ```
 
-The service will start on `http://localhost:8080`.
+The service will start on `http://localhost:8081`.
 
 ---
 
@@ -85,21 +86,19 @@ The service will start on `http://localhost:8080`.
 ### **1. Registration**
 Allows users to register using their email and password.
 
-- **URL**: `/api/users/register`
+- **URL**: `/signup`
 - **Method**: `POST`
 - **Request Body**:
   ```json
   {
-    "email": "user@example.com",
-    "password": "securepassword",
-    "firstName": "John",
-    "lastName": "Doe"
+    "email": "udaysisodiya@gmail.com",
+    "password": "Uday123!"
   }
   ```
 - **Response**:
   ```json
   {
-    "message": "User registered successfully"
+    "email": "udaysisodiya@gmail.com"
   }
   ```
 
@@ -108,18 +107,20 @@ Allows users to register using their email and password.
 ### **2. Login**
 Allows users to log in using their credentials.
 
-- **URL**: `/api/users/login`
+- **URL**: `/login`
 - **Method**: `POST`
 - **Request Body**:
   ```json
   {
-    "email": "user@example.com",
-    "password": "securepassword"
+    "email": "udaysisodiya@gmail.com",
+    "password": "Uday123!"
   }
   ```
 - **Response**:
-    - Redirects to `/dashboard` on successful login.
-    - Returns `401 Unauthorized` for invalid credentials.
+  ```json
+  {
+    "email": "udaysisodiya@gmail.com"
+  }
 
 ---
 
@@ -201,44 +202,3 @@ Reset the password using the token.
   ```
 
 ---
-
-## Testing
-
-Use Postman or any API client to test the endpoints. For example:
-- Register a user, log in, view profile, and update it.
-- Request a password reset and complete it.
-
-### Run Tests
-To run tests:
-
-```bash
-mvn test
-```
-
----
-
-## Future Enhancements
-
-- Add **social login** using OAuth2 for platforms like Google and Facebook.
-- Implement **email notifications** for password reset.
-- Add **rate limiting** to protect against brute-force attacks.
-
----
-
-## Contributing
-
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature-name`).
-3. Commit your changes (`git commit -m "Add feature"`).
-4. Push to the branch (`git push origin feature-name`).
-5. Open a pull request.
-
----
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
-
----
-
-With this README, users and developers can easily understand and work with your **User Management Service** project!

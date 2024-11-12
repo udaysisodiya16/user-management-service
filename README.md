@@ -9,7 +9,7 @@ password reset. The service is secure and scalable, using MySQL as the database 
 
 1. **User Management**:
 
-- **Registration**: Allow users to register using email or social media profiles.
+- **Registration**: Allow users to register using email.
 - **Login**: Secure login using credentials with Spring Security.
 - **Profile Management**: View and modify user profile details.
 - **Password Reset**: Reset passwords securely using a token-based system.

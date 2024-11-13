@@ -20,7 +20,7 @@ public class RoleService implements IRoleService {
 
     @Override
     public List<RoleModel> getRoles(Long userId) {
-        return roleRepo.findAllByUserIdAndState(userId, StateEnum.ACTIVE.name());
+        return roleRepo.findAllByUserIdAndState(userId, StateEnum.ACTIVE);
     }
 
 
@@ -44,6 +44,6 @@ public class RoleService implements IRoleService {
             roleModel.setState(StateEnum.INACTIVE);
             roleRepo.save(roleModel);
         }
-        return roleRepo.findAllByUserIdAndState(userId, StateEnum.ACTIVE.name());
+        return roleRepo.findAllByUserIdAndState(userId, StateEnum.ACTIVE);
     }
 }

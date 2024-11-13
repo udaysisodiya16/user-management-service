@@ -226,15 +226,14 @@ Reset the password using the token.
 
 Fetch the user's profile by ID.
 
-- **URL**: `/api/users/profile/{userId}`
+- **URL**: `/user/{id}`
 - **Method**: `GET`
 - **Response**:
   ```json
   {
-    "id": 1,
-    "email": "user@example.com",
-    "firstName": "John",
-    "lastName": "Doe"
+    "email": "udaysisodiya@gmail.com",
+    "firstName": "Uday",
+    "lastName": "Sisodiya"
   }
   ```
 
@@ -242,21 +241,63 @@ Fetch the user's profile by ID.
 
 Update user profile details.
 
-- **URL**: `/api/users/profile/{userId}`
+- **URL**: `/user/{id}`
 - **Method**: `PUT`
 - **Request Body**:
   ```json
   {
-    "firstName": "Jane",
-    "lastName": "Smith"
+    "email": "udaysisodiya@gmail.com",
+    "firstName": "Uday1",
+    "lastName": "Sisodiya1"
   }
   ```
 - **Response**:
   ```json
   {
-    "message": "Profile updated successfully"
+    "email": "udaysisodiya@gmail.com",
+    "firstName": "Uday1",
+    "lastName": "Sisodiya1"
   }
   ```
 
 ---
 
+### **7. Role Management**
+
+#### **Get Roles**
+
+Fetch the user's role.
+
+- **URL**: `/user/{userId}/role`
+- **Method**: `GET`
+- **Response**:
+  ```json
+  [
+    {
+        "role": "ADMIN"
+    }
+  ]
+  ```
+
+#### **Update Roles**
+
+Update user roles.
+
+- **URL**: `/user/{userId}/role`
+- **Method**: `PUT`
+- **Request Body**:
+  ```json
+  {
+  "roles":["ADMIN"]
+  }
+  ```
+- **Response**:
+  ```json
+  [
+    {
+        "role": "ADMIN"
+    }
+  ]
+  ```
+
+---

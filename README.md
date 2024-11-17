@@ -88,6 +88,11 @@ password reset. The service is secure and scalable, using MySQL as the database 
 
 The service will start on `http://localhost:8081`.
 
+5. **Access Swagger API Documentation**
+
+- After the application starts, access Swagger UI for API testing and documentation at:  
+  [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html)
+
 ---
 
 ## API Endpoints

@@ -239,6 +239,8 @@ Fetch the user's profile by ID.
     "email": "udaysisodiya@gmail.com",
     "firstName": "Uday",
     "lastName": "Sisodiya"
+    "address": "301, Commerce House 6, Ahmedabad, India - 380009",
+    "phoneNumber": "9909988088"
   }
   ```
 
@@ -253,7 +255,9 @@ Update user profile details.
   {
     "email": "udaysisodiya@gmail.com",
     "firstName": "Uday1",
-    "lastName": "Sisodiya1"
+    "lastName": "Sisodiya1",
+    "address": "301, Commerce House 6, Ahmedabad, India - 380009",
+    "phoneNumber": "9909988088"
   }
   ```
 - **Response**:
@@ -261,7 +265,9 @@ Update user profile details.
   {
     "email": "udaysisodiya@gmail.com",
     "firstName": "Uday1",
-    "lastName": "Sisodiya1"
+    "lastName": "Sisodiya1",
+     "address": "301, Commerce House 6, Ahmedabad, India - 380009",
+    "phoneNumber": "9909988088"
   }
   ```
 

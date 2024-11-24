@@ -238,7 +238,7 @@ Fetch the user's profile by ID.
   {
     "email": "udaysisodiya@gmail.com",
     "firstName": "Uday",
-    "lastName": "Sisodiya"
+    "lastName": "Sisodiya",
     "address": "301, Commerce House 6, Ahmedabad, India - 380009",
     "phoneNumber": "9909988088"
   }

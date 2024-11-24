@@ -2,7 +2,6 @@ package com.capstone.usermanagementservice.services;
 
 import com.capstone.usermanagementservice.dtos.UserDetailUpdateRequestDto;
 import com.capstone.usermanagementservice.exceptions.NotFoundException;
-import com.capstone.usermanagementservice.models.RoleModel;
 import com.capstone.usermanagementservice.models.UserModel;
 import com.capstone.usermanagementservice.repos.RoleRepo;
 import com.capstone.usermanagementservice.repos.UserRepo;
@@ -29,6 +28,8 @@ public class UserService implements IUserService{
         userModel.setEmail(userDetailUpdateRequestDto.getEmail());
         userModel.setFirstName(userDetailUpdateRequestDto.getFirstName());
         userModel.setLastName(userDetailUpdateRequestDto.getLastName());
+        userModel.setAddress(userDetailUpdateRequestDto.getAddress());
+        userModel.setPhoneNumber(userDetailUpdateRequestDto.getPhoneNumber());
         return userRepo.save(userModel);
     }
 

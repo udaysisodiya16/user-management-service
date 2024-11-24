@@ -16,4 +16,12 @@ public class SignupRequestDto {
     @NotBlank(message = "password cannot blank")
     private String password;
 
+    @NotBlank(message = "firstName cannot blank")
+    private String firstName;
+
+    private String lastName;
+
+    private String address;
+
+    private String phoneNumber;
 }

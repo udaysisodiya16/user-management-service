@@ -46,13 +46,17 @@ public class AuthService implements IAuthService {
     private UserDetailsService userDetailsService;
 
     @Override
-    public UserModel signup(String email, String password) throws UserAlreadyExistsException, JsonProcessingException {
+    public UserModel signup(String email, String password, String firstName, String lastName, String address, String phoneNumber) throws UserAlreadyExistsException, JsonProcessingException {
         Optional<UserModel> userOptional = userRepo.findUserByEmail(email);
         if (userOptional.isPresent()) {
             throw new UserAlreadyExistsException("Email already registered !!");
         }
 
         UserModel user = new UserModel();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setAddress(address);
+        user.setPhoneNumber(phoneNumber);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setState(StateEnum.ACTIVE);

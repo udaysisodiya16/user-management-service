@@ -4,8 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
 public class UserDetailUpdateRequestDto {
@@ -17,5 +15,9 @@ public class UserDetailUpdateRequestDto {
     private String firstName;
 
     private String lastName;
+
+    private String address;
+
+    private String phoneNumber;
 
 }

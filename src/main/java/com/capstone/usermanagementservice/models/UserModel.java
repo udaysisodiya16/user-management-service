@@ -15,6 +15,8 @@ public class UserModel extends BaseModel {
     private String password;
     private String firstName;
     private String lastName;
+    private String address;
+    private String phoneNumber;
 
     @ManyToMany
     private Set<RoleModel> roles;

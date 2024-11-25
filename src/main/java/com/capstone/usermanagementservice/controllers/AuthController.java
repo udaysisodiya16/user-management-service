@@ -56,9 +56,6 @@ public class AuthController {
     @PostMapping("/validateToken")
     public ResponseEntity<Boolean> validateToken(@RequestBody ValidateTokenDto validateTokenDto) {
         Boolean result = authService.validateToken(validateTokenDto.getToken(), validateTokenDto.getUserId());
-        if (!result) {
-            throw new RuntimeException("Please login again");
-        }
         return ResponseEntity.ok(result);
     }
 

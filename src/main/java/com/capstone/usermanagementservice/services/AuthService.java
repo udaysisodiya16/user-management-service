@@ -100,10 +100,8 @@ public class AuthService implements IAuthService {
     @Override
     public Boolean validateToken(String token, Long userId) {
         UserModel user = userRepo.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        Optional<SessionModel> optionalSession = sessionRepo.findByTokenAndUser_Id(token, user.getId());
-        if (optionalSession.isEmpty()) {
-            return false;
-        }
+        sessionRepo.findByTokenAndUser_Id(token, user.getId())
+                .orElseThrow(() -> new NotFoundException("Session not found"));
         return JwtUtil.validateToken(token, secretKey, new CustomUserDetails(user));
     }
 

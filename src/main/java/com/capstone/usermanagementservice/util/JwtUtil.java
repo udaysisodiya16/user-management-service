@@ -19,8 +19,7 @@ public class JwtUtil {
         Claims claims = jwtParser.parseSignedClaims(token).getPayload();
         if (claims.getSubject().equals(userDetails.getUsername()) &&
                 claims.getExpiration().before(new Date())) {
-            System.out.println("TOKEN EXPIRED");
-            return false;
+            throw new IllegalArgumentException("Token Expired");
         }
         return true;
     }

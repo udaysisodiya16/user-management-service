@@ -74,6 +74,8 @@ public class AuthService implements IAuthService {
             throw new InvalidCredentialsException("please provide correct password");
         }
 
+        sessionRepo.findByUser(user).ifPresent(session -> sessionRepo.delete(session));
+
         String token = JwtUtil.generateToken(secretKey, new CustomUserDetails(user));
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();

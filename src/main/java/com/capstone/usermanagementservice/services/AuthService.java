@@ -12,6 +12,7 @@ import com.capstone.usermanagementservice.security.CustomUserDetails;
 import com.capstone.usermanagementservice.util.JwtUtil;
 import com.capstone.usermanagementservice.util.NotificationUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.transaction.Transactional;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +26,7 @@ import javax.crypto.SecretKey;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class AuthService implements IAuthService {
 
     @Autowired
@@ -46,7 +48,7 @@ public class AuthService implements IAuthService {
     private UserDetailsService userDetailsService;
 
     @Override
-    public UserModel signup(String email, String password, String firstName, String lastName, String address, String phoneNumber) throws UserAlreadyExistsException, JsonProcessingException {
+    public UserModel signup(String email, String password, String firstName, String lastName, String phoneNumber) throws UserAlreadyExistsException, JsonProcessingException {
         Optional<UserModel> userOptional = userRepo.findUserByEmail(email);
         if (userOptional.isPresent()) {
             throw new UserAlreadyExistsException("Email already registered !!");
@@ -55,7 +57,6 @@ public class AuthService implements IAuthService {
         UserModel user = new UserModel();
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setAddress(address);
         user.setPhoneNumber(phoneNumber);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));

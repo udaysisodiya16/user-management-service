@@ -21,7 +21,5 @@ public class SignupRequestDto {
 
     private String lastName;
 
-    private String address;
-
     private String phoneNumber;
 }

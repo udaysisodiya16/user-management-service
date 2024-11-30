@@ -5,10 +5,12 @@ import com.capstone.usermanagementservice.exceptions.NotFoundException;
 import com.capstone.usermanagementservice.models.UserModel;
 import com.capstone.usermanagementservice.repos.RoleRepo;
 import com.capstone.usermanagementservice.repos.UserRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class UserService implements IUserService{
 
     @Autowired
@@ -28,7 +30,6 @@ public class UserService implements IUserService{
         userModel.setEmail(userDetailUpdateRequestDto.getEmail());
         userModel.setFirstName(userDetailUpdateRequestDto.getFirstName());
         userModel.setLastName(userDetailUpdateRequestDto.getLastName());
-        userModel.setAddress(userDetailUpdateRequestDto.getAddress());
         userModel.setPhoneNumber(userDetailUpdateRequestDto.getPhoneNumber());
         return userRepo.save(userModel);
     }

@@ -4,6 +4,7 @@ import com.capstone.usermanagementservice.constants.RoleEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ public class RoleModel extends BaseModel {
     @Enumerated(EnumType.STRING)
     private RoleEnum value;
 
-    private Long userId;
+    @ManyToOne
+    private UserModel user;
 
 }

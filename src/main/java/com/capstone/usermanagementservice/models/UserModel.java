@@ -1,10 +1,11 @@
 package com.capstone.usermanagementservice.models;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Setter
@@ -15,9 +16,11 @@ public class UserModel extends BaseModel {
     private String password;
     private String firstName;
     private String lastName;
-    private String address;
     private String phoneNumber;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "user")
     private Set<RoleModel> roles;
+
+    @OneToMany(mappedBy = "user")
+    private List<AddressModel> addresses;
 }

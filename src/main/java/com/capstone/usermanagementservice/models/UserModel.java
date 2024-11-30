@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 import java.util.Set;
@@ -22,5 +23,6 @@ public class UserModel extends BaseModel {
     private Set<RoleModel> roles;
 
     @OneToMany(mappedBy = "user")
+    @Where(clause = "state = 'ACTIVE'")
     private List<AddressModel> addresses;
 }

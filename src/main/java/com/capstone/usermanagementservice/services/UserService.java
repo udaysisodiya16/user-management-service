@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
-public class UserService implements IUserService{
+public class UserService implements IUserService {
 
     @Autowired
     private UserRepo userRepo;
@@ -32,6 +32,11 @@ public class UserService implements IUserService{
         userModel.setLastName(userDetailUpdateRequestDto.getLastName());
         userModel.setPhoneNumber(userDetailUpdateRequestDto.getPhoneNumber());
         return userRepo.save(userModel);
+    }
+
+    @Override
+    public void checkValidUser(Long userId) {
+        userRepo.findById(userId).orElseThrow(() -> new NotFoundException("User Not Exist"));
     }
 
 }

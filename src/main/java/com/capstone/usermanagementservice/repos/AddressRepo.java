@@ -1,0 +1,12 @@
+package com.capstone.usermanagementservice.repos;
+
+import com.capstone.usermanagementservice.models.AddressModel;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface AddressRepo extends JpaRepository<AddressModel, Long> {
+    List<AddressModel> findByUserId(Long userId);
+}

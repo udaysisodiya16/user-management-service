@@ -9,4 +9,5 @@ public interface IUserService {
 
     UserModel updateUserDetail(Long id, UserDetailUpdateRequestDto userDetailUpdateRequestDto);
 
+    void checkValidUser(Long userId);
 }

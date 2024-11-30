@@ -5,6 +5,7 @@ import com.capstone.usermanagementservice.dtos.AddressResponseDto;
 import com.capstone.usermanagementservice.mappers.AddressMapper;
 import com.capstone.usermanagementservice.models.AddressModel;
 import com.capstone.usermanagementservice.services.IAddressService;
+import com.capstone.usermanagementservice.services.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,9 @@ public class AddressController {
 
     @Autowired
     private IAddressService addressService;
+
+    @Autowired
+    private IUserService userService;
 
     @Autowired
     private AddressMapper addressMapper;
@@ -36,15 +40,18 @@ public class AddressController {
     @PostMapping
     public ResponseEntity<AddressResponseDto> addUserAddress(@RequestParam("userId") Long userId,
                                                              @RequestBody @Valid AddressRequestDto addressRequestDto) {
-        AddressModel address = addressService.addUserAddress(userId, addressRequestDto);
-        return ResponseEntity.ok(addressMapper.addressModelToAddressResponseDto(address));
+        userService.checkValidUser(userId);
+        AddressModel address = addressMapper.addressRequestDtoToAddressModel(addressRequestDto);
+        AddressModel createdAddress = addressService.addUserAddress(userId, address);
+        return ResponseEntity.ok(addressMapper.addressModelToAddressResponseDto(createdAddress));
     }
 
     @PutMapping("/{addressId}/")
     public ResponseEntity<AddressResponseDto> updateUserAddress(@PathVariable("addressId") Long addressId,
                                                                 @RequestBody @Valid AddressRequestDto addressRequestDto) {
-        AddressModel address = addressService.updateUserAddress(addressId, addressRequestDto);
-        return ResponseEntity.ok(addressMapper.addressModelToAddressResponseDto(address));
+        AddressModel address = addressMapper.addressRequestDtoToAddressModel(addressRequestDto);
+        AddressModel updateAddress = addressService.updateUserAddress(addressId, address);
+        return ResponseEntity.ok(addressMapper.addressModelToAddressResponseDto(updateAddress));
     }
 
     @DeleteMapping("/{addressId}/")
